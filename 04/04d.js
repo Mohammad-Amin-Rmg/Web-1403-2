@@ -1,19 +1,24 @@
 import { createServer } from 'http';
 
-const server = createServer((req, res, data) => {
+const server = createServer((req, res) => {
+    let body = '';
     req.on('data',(chunck) =>{
-        data += chunck;
+        body += chunck;
     })
 
-    req.end('end',()=>{
+    req.on('end',()=>{
         try{
 
-            data = JSON.parse(data);
+            body = JSON.parse(body);
         }
         catch(e){
-
+            console.error('JSON parsing error:', e.message);
+            res.statusCode = 400;
+            res.end('Invalid JSON');
+            return;
         }
-        router(req,res,data);
+
+        router(req,res,body);
     })
 
 })
@@ -24,11 +29,9 @@ function router (req , res , data){
     let command = url[1];
     let input = url.slice(2);
 
-    console.log(req.url);
-    console.log(req.methode);
-    if (req.method === 'POST' && command === 'sum') {
 
-           let sum = parseInt((+data.input1) + parseInt(+data.input2)).toString()
+    if (req.method === 'POST' && command === 'sum') {
+           let sum = parseInt((+data.input1) + parseInt(+data.input2)).toString();
            res.write(sum);
            res.end();
     }
@@ -45,4 +48,6 @@ function router (req , res , data){
 
 }
 
-server.listen(80);
+server.listen(80,()=>{
+    console.log('listening on port 80');
+});
