@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>08 a </title>
+    <style>
+        #result{
+            display: block;
+            background-color: lightgoldenrodyellow;
+            width: 100px;
+            height: 100px;
+
+        }
+    </style>
+</head>
+<body>
+    <div>
+    Number 1<input type="text" id="val1">
+    </div>
+    <div>
+    Number 2<input type="text" id="val2">
+    </div>
+    <input type="button" id="submit" value="calc">
+    <div id="result"></div>
+    <script>
+        async function getData() {
+            let val1 = document.getElementById("val1").value;
+            let val2 = document.getElementById("val2").value;
+            const url = "http://127.0.0.1/sum";
+
+            try {
+                const response = await fetch(url,{
+                    method:"POST",
+                    body: JSON.stringify({ input1: val1, input2:val2 }),
+                });
+                if (!response.ok) {
+                    console.log('ERROR.')
+                }
+                else{
+                    const json = await response.json();
+                    let result = document.createElement("div");
+                    document.getElementById("result").appendChild(result).innerHTML = json.toString() ;
+                    console.log(json);
+
+                }                
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        let calc = document.getElementById("submit");
+        calc.addEventListener("click",() =>{
+            getData();
+        })
+    </script>
+</body>
+</html>

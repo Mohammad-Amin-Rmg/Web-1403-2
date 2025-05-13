@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>08 a </title>
+</head>
+<body>
+    <div>
+    <input type="text" id="val1">
+    </div>
+    <div>
+    <input type="text" id="val2">
+    </div>
+    <input type="button" id="submit" value="calc">
+
+    <script>
+        async function getData() {
+            let val1 = document.getElementById("val1").value;
+            let val2 = document.getElementById("val2").value;
+            const url = `http://127.0.0.1/sum/${val1}/${val2}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    console.log('ERROR.')
+                }
+                else{
+                    const json = await response.json();
+                    console.log(json);
+                }                
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        document.getElementById("submit").addEventListener("click",() =>{
+            getData();
+        })
+    </script>
+</body>
+</html>

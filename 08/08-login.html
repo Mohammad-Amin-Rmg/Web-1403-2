@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>08 a </title>
+    <style>
+        #result{
+            display: block;
+            background-color: lightgoldenrodyellow;
+            width: 100px;
+            height: 100px;
+
+        }
+    </style>
+</head>
+<body>
+    <div>
+    Name<input type="text" id="name">
+    </div>
+    <div>
+    Pass<input type="text" id="pass">
+    </div>
+    <input type="button" id="submit" value="calc">
+    <div id="result"></div>
+    <script>
+        async function getData() {
+            let userName = document.getElementById("name").value;
+            let password = document.getElementById("pass").value;
+            const url = "http://127.0.0.1/token";
+
+            try {
+                const response = await fetch(url,{
+                    method:"POST",
+                    body: JSON.stringify({ user: userName, pass:password }),
+                });
+                if (!response.ok) {
+                    console.log('ERROR.')
+                }
+                else{
+                    const json = await response.json();
+                    let result = document.createElement("div");
+                    document.getElementById("result").appendChild(result).innerHTML = JSON.stringify(json);
+                    console.log(json);
+                }                
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        let calc = document.getElementById("submit");
+        calc.addEventListener("click",() =>{
+            getData();
+        })
+    </script>
+</body>
+</html>
