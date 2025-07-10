@@ -1,0 +1,24 @@
+{
+    "records": [
+        {
+            "user": "amin",
+            "pass": "123",
+            "mail": "test@gmail.com"
+        },
+        {
+            "user": "reza",
+            "pass": "456",
+            "mail": "reza@gmail.com"
+        },
+        {
+            "user": "mahdi",
+            "pass": "789",
+            "mail": "mahdi@gmail.com"
+        },
+        {
+            "user": "javad",
+            "pass": "1233",
+            "mail": "ddgddfg"
+        }
+    ]
+}

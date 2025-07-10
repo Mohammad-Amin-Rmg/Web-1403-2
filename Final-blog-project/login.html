@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <style>
+        #mainBox {
+            padding: 40;
+            background-color: #00bfff;
+            width: 20%;
+        }
+        div > div{
+            padding:10px 10px;
+        }
+        #resultBox{
+            background-color: #003446;
+            width: 20%;
+            height: 50px;
+            color: white;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+     <div id="mainBox">
+        <div>
+            <label for="user">user:</label>
+            <input id="user" type="text">
+        </div>
+        <div>
+            <label for="pass">pass:</label>
+            <input id="pass" type="text">
+        </div>
+        <div>
+            <input type="button" id="l" value="login">
+        </div>
+    </div>
+    <div id="resultBox"></div>
+
+    <script>
+        async function login(){
+            let userInput = document.getElementById("user").value;
+            let passInput = document.getElementById("pass").value;
+
+            const url = "http://127.0.0.1:80/api/login";
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user: userInput,
+                        pass: passInput,
+                    })
+                });
+                if (!response.ok) {
+                    console.log('ERROR');
+                    const errorText = await response.json();
+                    let resultBox = document.getElementById("resultBox");
+                    resultBox.innerHTML = "";
+                    let elem = document.createElement("span");
+                    elem.innerHTML = errorText;
+                    resultBox.appendChild(elem);
+                    resultBox.style.display = "flex";
+                    resultBox.style.justifyContent = "center";
+                    resultBox.style.alignItems = "center";
+                }
+                else{
+                    const json = await response.json();
+                    let resultBox = document.getElementById("resultBox");
+                    resultBox.innerHTML = ""; 
+                    let elem = document.createElement("span");
+                    elem.innerHTML = json;
+                    resultBox.appendChild(elem);
+                    resultBox.style.display = "flex"; 
+                    resultBox.style.justifyContent = "center";
+                    resultBox.style.alignItems = "center";
+                }                
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        document.getElementById("l")
+            .addEventListener("click", function(){
+                console.log('click');
+                login();
+            });   
+    </script>
+</body>
+
+</html>

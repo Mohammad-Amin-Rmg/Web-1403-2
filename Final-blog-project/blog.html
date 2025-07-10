@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blog</title>
+</head>
+<body>
+    <div id="mainBox"></div>
+    <script>
+        function createItemDiv(article){
+            let itemDiv = document.createElement("div");
+            let itemH3 = document.createElement("h3");
+            let itemP = document.createElement("p");
+            let itemButton = createItemButton(itemDiv);
+
+            itemDiv.style.backgroundColor = '#00bfff';
+            itemDiv.style.width = '20%';
+            itemDiv.style.paddingLeft = '5px';
+            
+            itemH3.innerHTML = article.title;
+            itemP.innerHTML = article.body;
+
+            itemButton.addEventListener("click", async function () {
+                let isArticleDeleted = await deleteArticle(article.id);
+                if(isArticleDeleted){
+                    itemDiv.parentNode.removeChild(itemDiv);
+                }
+            });
+
+            itemDiv.appendChild(itemButton);
+            itemDiv.appendChild(itemH3);
+            itemDiv.appendChild(itemP);
+
+            return itemDiv;
+        }
+
+        function createItemButton(div){
+            let itemButton = document.createElement("input");
+            itemButton.setAttribute('type','button');
+            itemButton.setAttribute('value','X');
+            itemButton.style.backgroundColor = 'red';
+            itemButton.style.position = 'relative';
+            itemButton.style.left = '243px';
+            itemButton.style.top = '75px';
+
+            return itemButton;
+        }
+
+        async function deleteArticle(id){
+            const url = `http://127.0.0.1/api/article/${id}`;
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) {
+                    console.log('ERROR.');
+                    let elem = document.createElement("span");
+                    elem.innerHTML = await response.json();
+                    document.getElementById("mainBox").appendChild(elem);
+                    return false;
+                }
+                else{
+                    console.log('Article deleted:', id);          
+                    return true;
+                }                
+            } catch (error) {
+                console.error(error);
+                return false;
+            }
+        }
+
+        async function getData() {
+            const url = "http://127.0.0.1/api/article";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    console.log('ERROR.');
+                    let elem = document.createElement("span");
+                    elem.innerHTML = "";
+                    elem.innerHTML = await response.json();
+                    document.getElementById("mainBox").appendChild(elem);
+                }
+                else{
+                    const json = await response.json();
+                    for(let article of json.records){
+                        document.getElementById("mainBox").appendChild(createItemDiv(article));
+                    }
+                }                
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        getData();
+    </script>
+</body>
+</html>

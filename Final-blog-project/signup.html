@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <style>
+        #mainBox {
+            padding: 40;
+            background-color: #00bfff;
+            width: 20%;
+        }
+        div > div{
+            padding:10px 10px;
+        }
+        #resultBox{
+            background-color: #003446;
+            width: 20%;
+            height: 50px;
+            color: white;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mainBox">
+        <div>
+            <label for="user">user:</label>
+            <input id="user" type="text">
+        </div>
+        <div>
+            <label for="pass">pass:</label>
+            <input id="pass" type="text">
+        </div>
+        <div>
+            <label for="mail">mail:</label>
+            <input id="mail" type="text">
+        </div>
+        <div>
+            <input type="button" id="s" value="signup">
+        </div>
+    </div>
+    <div id="resultBox"></div>
+
+    <script>
+        async function signup(){
+            let userInput = document.getElementById("user").value;
+            let passInput = document.getElementById("pass").value;
+            let mailInput = document.getElementById("mail").value;
+
+            const url = "http://127.0.0.1:80/api/signup";
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user: userInput,
+                        pass: passInput,
+                        mail: mailInput,
+                    })
+                });
+                if (!response.ok) {
+                    console.log('ERROR');
+                    const errorText = await response.json();
+                    let resultBox = document.getElementById("resultBox");
+                    resultBox.innerHTML = "";
+                    let elem = document.createElement("span");
+                    elem.innerHTML = errorText;
+                    resultBox.appendChild(elem);
+                    resultBox.style.display = "flex";
+                    resultBox.style.justifyContent = "center";
+                    resultBox.style.alignItems = "center";
+                }
+                else{
+                    const json = await response.json();
+                    let resultBox = document.getElementById("resultBox");
+                    resultBox.innerHTML = ""; 
+                    let elem = document.createElement("span");
+                    elem.innerHTML = json;
+                    resultBox.appendChild(elem);
+                    resultBox.style.display = "flex"; 
+                    resultBox.style.justifyContent = "center";
+                    resultBox.style.alignItems = "center";
+                }                
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        document.getElementById("s")
+            .addEventListener("click", function(){
+                console.log('click');
+                signup();
+            });   
+    </script>
+</body>
+
+</html>
